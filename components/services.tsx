@@ -10,7 +10,7 @@ const services = [
     title: "Mountain Cafe",
     description:
       "Start your morning with hand-brewed Himalayan coffee and freshly baked goods on a terrace overlooking the valley. Our cafe serves local organic fare from farm to table.",
-    image: "/images/cafe.jpg",
+    image: "/images/dining-rua.jpeg",
     imageAlt: "Saanjh mountain cafe terrace with fresh beverages",
   },
   {
@@ -18,7 +18,7 @@ const services = [
     title: "Luxury Rooms",
     description:
       "Explore hidden trails, alpine meadows, and ancient village paths with our expert local guides. From gentle sunrise walks to full-day summit expeditions.",
-    image: "/images/about.jpg",
+    image: "/images/dusk-bed.avif",
     imageAlt: "Mountain trail through Himalayan landscape",
   },
   {
@@ -26,7 +26,7 @@ const services = [
     title: "Bonfire Evenings",
     description:
       "As the sun dips behind the peaks, gather around a crackling fire under a canopy of stars. Stories, songs, and the warmth of shared moments await.",
-    image: "/images/bonfire.jpg",
+    image: "/images/bon.png",
     imageAlt: "Evening bonfire at Saanjh homestay under starry sky",
   },
   {

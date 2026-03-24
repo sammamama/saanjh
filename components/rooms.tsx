@@ -2,114 +2,80 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Users,
-  Maximize2,
-  Wifi,
-  Eye,
-  TreePine,
-  FlameKindling,
-} from "lucide-react";
+
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { featureIcons, Room } from "@/types/roomType";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
-
-const featureIcons: Record<string, typeof Wifi> = {
-  "Wi-Fi": Wifi,
-  "Mountain View": Eye,
-  "Valley View": Eye,
-  Fireplace: FlameKindling,
-  "Private Cottage": TreePine,
-};
-
-interface Room {
-  name: string;
-  tagline: string;
-  description: string;
-  price: number;
-  image: string;
-  imageAlt: string;
-  guests: number;
-  size: string;
-  features: string[];
-}
+import { Users } from "lucide-react";
 
 type RoomType = "individual" | "group";
 
-const individualRooms = [
+const individualRooms: Room[] = [
   {
-    name: "Sunrise Suite",
-    tagline: "Wake up with the peaks",
+    name: "Dusk",
+    tagline: "Largest luxury room in property",
     description:
-      "Our signature room with panoramic Himalayan views, a king-size bed, private fireplace, and a balcony that opens to the first light of dawn.",
-    price: 4500,
-    image: "/images/room-sunrise.jpg",
+      "Our signature room with panoramic Himalayan views, a king-size bed, and a balcony that opens to the first light of dawn.",
+    image: "/images/dusk-room.avif",
     imageAlt: "Sunrise Suite at Saanjh with mountain views",
     guests: 2,
-    size: "400 sq ft",
-    features: ["Mountain View", "Fireplace", "Balcony", "Wi-Fi"],
+    highlights: ["Mountain View", "Living Area", "Balcony", "Wi-Fi", "And More"],
+    bestValue: true,
   },
   {
-    name: "Valley View Room",
+    name: "Luna",
     tagline: "Serenity at every glance",
     description:
-      "A cozy double room with floor-to-ceiling windows framing the valley below. Rustic wooden interiors, handwoven textiles, and warm ambient lighting.",
-    price: 3200,
-    image: "/images/room-valley.jpg",
+      "A cozy, warm room with a king-sized bed and private jacuzzi, featuring floor-to-ceiling valley views, rustic wooden interiors, handwoven textiles, and soft ambient lighting.",
+    image: "/images/luna-room.avif",
     imageAlt: "Valley View Room with forest and valley panorama",
     guests: 2,
-    size: "320 sq ft",
-    features: ["Valley View", "Wooden Interiors", "Reading Nook", "Wi-Fi"],
+    highlights: ["Mountain View", "Cozy", "Jacuzzi", "Wi-Fi", "And More"],
   },
   {
-    name: "Pine Cottage",
+    name: "Horizon",
     tagline: "Your private mountain hideaway",
     description:
-      "A standalone cottage surrounded by pine trees, offering complete privacy with its own garden patio, outdoor seating, and a romantic wood-burning stove.",
-    price: 5800,
-    image: "/images/room-pine.jpg",
+      "A cozy attic room with a comfortable living area and a private balcony, offering a warm, intimate atmosphere with charming views and thoughtful details throughout.",
+    image: "/images/horizon-room.avif",
     imageAlt: "Pine Cottage surrounded by forest at Saanjh",
-    guests: 3,
-    size: "520 sq ft",
-    features: ["Private Cottage", "Garden Patio", "Wood Stove", "Wi-Fi"],
+    guests: 2,
+    highlights: ["Balcony", "Living Area", "Wi-Fi", "And More"],
   },
 ];
 
-const groupRooms = [
+const groupRooms: Room[] = [
   {
     name: "Upto 4 people",
-    tagline: "Wake up with the peaks",
+    tagline: "Private Area (2Bed + Living Area + Balcony)",
     description:
-      "Our signature room with panoramic Himalayan views, a king-size bed, private fireplace, and a balcony that opens to the first light of dawn.",
-    price: 4500,
-    image: "/images/room-sunrise.jpg",
+      "Our signature 2Bed apartment featuring a private living area, comfortable bedrooms, and a balcony with beautiful views—perfect for relaxed mornings and unhurried evenings.",
+    image: "/images/fourCombo.png",
     imageAlt: "Sunrise Suite at Saanjh with mountain views",
-    guests: 2,
-    size: "400 sq ft",
-    features: ["Mountain View", "Fireplace", "Balcony", "Wi-Fi"],
+    guests: 4,
+    highlights: ["Mountain View", "Fireplace", "Balcony", "Wi-Fi"],
   },
   {
     name: "Upto 10 people",
-    tagline: "Serenity at every glance",
+    tagline: "Private Villa (5Bed + 2Living Area + 2Balcony)",
     description:
-      "A cozy double room with floor-to-ceiling windows framing the valley below. Rustic wooden interiors, handwoven textiles, and warm ambient lighting.",
-    price: 3200,
-    image: "/images/room-valley.jpg",
+      "A spacious 5Bed private villa offering complete exclusivity, with expansive interiors, large windows framing valley views, rustic wooden finishes, handwoven textiles, and warm ambient lighting throughout.",
+    image: "/images/tenCombo.png",
     imageAlt: "Valley View Room with forest and valley panorama",
-    guests: 2,
-    size: "320 sq ft",
-    features: ["Valley View", "Wooden Interiors", "Reading Nook", "Wi-Fi"],
+    guests: 10,
+    highlights: ["Private Cottage", "Valley View", "Wooden Interiors", "Wi-Fi"],
   },
   {
-    name: "Upto 30 people",
-    tagline: "Your private mountain hideaway",
+    name: "Double Date",
+    tagline: "2Bed + 2Jacuzzi",
     description:
-      "A standalone cottage surrounded by pine trees, offering complete privacy with its own garden patio, outdoor seating, and a romantic wood-burning stove.",
-    price: 5800,
-    image: "/images/room-pine.jpg",
+      "A stylish 2Bed private retreat designed for double-date getaways, featuring two private jacuzzis, complete privacy, cozy living spaces, and a warm, romantic atmosphere throughout.",
+    image: "/images/doubleD.png",
     imageAlt: "Pine Cottage surrounded by forest at Saanjh",
-    guests: 3,
-    size: "520 sq ft",
-    features: ["Private Cottage", "Garden Patio", "Wood Stove", "Wi-Fi"],
+    guests: 4,
+    highlights: ["Private Cottage", "Jacuzzi", "Wi-Fi", "Mountain View"],
   },
 ];
 
@@ -122,6 +88,8 @@ export default function Rooms() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [roomType, setRoomType] = useState<RoomType>("individual");
+
+  const router = useRouter();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -174,17 +142,14 @@ export default function Rooms() {
             >
               For Individuals
             </ToggleGroupItem>
-            <ToggleGroupItem 
-              value="group" 
-              onClick={() => setRoomType("group")}
-            >
+            <ToggleGroupItem value="group" onClick={() => setRoomType("group")}>
               For Groups
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
 
         {/* Room cards */}
-        <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 gap-8 flex flex-col md:flex-row justify-center items-center">
           {roomData[roomType].map((room, index) => (
             <div
               key={room.name}
@@ -204,15 +169,6 @@ export default function Rooms() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
-                <div className="absolute top-4 right-4 rounded-full border border-[#FAF5F0]/20 bg-[#1A1A1A]/40 px-4 py-1.5 backdrop-blur-md">
-                  <span className="text-xs font-semibold text-[#FAF5F0]">
-                    {"\u20B9"}
-                    {room.price.toLocaleString("en-IN")}
-                  </span>
-                  <span className="text-[10px] font-normal text-[#FAF5F0]/60">
-                    /night
-                  </span>
-                </div>
               </div>
 
               {/* Content */}
@@ -233,23 +189,19 @@ export default function Rooms() {
                     <Users className="h-3.5 w-3.5" />
                     {room.guests} Guests
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Maximize2 className="h-3.5 w-3.5" />
-                    {room.size}
-                  </span>
                 </div>
 
                 {/* Feature pills */}
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {room.features.map((feature) => {
-                    const FeatureIcon = featureIcons[feature];
+                  {room.highlights.map((highlight) => {
+                    const FeatureIcon = featureIcons[highlight];
                     return (
                       <span
-                        key={feature}
+                        key={highlight}
                         className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-[11px] font-medium text-muted-foreground"
                       >
                         {FeatureIcon && <FeatureIcon className="h-3 w-3" />}
-                        {feature}
+                        {highlight}
                       </span>
                     );
                   })}
@@ -265,6 +217,18 @@ export default function Rooms() {
               </div>
             </div>
           ))}
+          <div
+            onClick={() => {
+              router.push("/rooms");
+            }}
+            className={`relative w-full h-[50px] md:h-auto md:self-stretch md:w-[200px] flex items-center cursor-pointer justify-center overflow-hidden rounded-lg group
+              ${visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+          >
+            <div className="absolute inset-0 h-full w-full bg-primary group-hover:bg-secondary transition-all"></div>
+            <p className="text-white z-10 font-semibold group-hover:text-primary text-sm md:[writing-mode:vertical-rl] md:rotate-180 duration-300 tracking-widest uppercase group-hover:scale-110 transition-all">
+              Explore More →
+            </p>
+          </div>
         </div>
       </div>
     </section>

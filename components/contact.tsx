@@ -7,7 +7,7 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Location",
-    value: "Saanjh Homestay, Old Manali Road, Manali, Himachal Pradesh 175131",
+    value: "Saanjh Homestay, Mashobra, Shimla",
   },
   {
     icon: Phone,
@@ -45,7 +45,7 @@ export default function Contact() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="contact" className="bg-background py-24 lg:py-32">
+    <section ref={sectionRef} id="contact" className="bg-secondary py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20">
           {/* Info column */}
